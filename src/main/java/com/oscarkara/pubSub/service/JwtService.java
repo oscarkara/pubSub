@@ -22,6 +22,7 @@ public class JwtService {
     public String generateToken(UserLoginDetails user) {
         return Jwts.builder()
                 .setSubject(user.user().getId().toString())
+                .claim("role", user.user().getRole().name())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)

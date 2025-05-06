@@ -17,6 +17,8 @@ public class User{
     private String password;
     @Column(nullable = false)
     private String name;
+    @Enumerated(EnumType.STRING)
+    private Role role;
     @OneToMany(mappedBy = "user")
     private List<Subscription> subscribers;
 
@@ -54,5 +56,13 @@ public class User{
 
     public void setSubscribers(List<Subscription> subscribers) {
         this.subscribers = subscribers;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }

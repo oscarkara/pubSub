@@ -1,5 +1,6 @@
 package com.oscarkara.pubSub.service;
 
+import com.oscarkara.pubSub.model.Role;
 import com.oscarkara.pubSub.model.User;
 import com.oscarkara.pubSub.repository.UserRepository;
 import com.oscarkara.pubSub.security.AuthRequest;
@@ -35,6 +36,7 @@ public class AuthService {
         user.setUsername(request.getUsername());
         user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setName(request.getName());
+        user.setRole(Role.USER);
 
         userRepository.save(user);
 
