@@ -33,7 +33,7 @@ public class TopicService {
         var subscriptionList = subscriptionRepository.findAllByTopicId(topicId);
 
         for(Subscription sub : subscriptionList){
-            topicSubscriptionService.deleteSubscriptionQueue(topicId, sub.getUser().getId());
+            topicSubscriptionService.unsubscribeUserToTopic(topicId, sub.getUser().getId());
         }
 
         topicSubscriptionService.deleteTopicExchange(topicId);

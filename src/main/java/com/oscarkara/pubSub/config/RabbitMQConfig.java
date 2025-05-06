@@ -49,7 +49,7 @@ public class RabbitMQConfig {
 
             List<Subscription> subscriptions = subscriptionRepository.findAllByTopicId(topic.getId());
             for (Subscription sub : subscriptions) {
-                String queueName = "queue.user." + sub.getUser().getId()+ ".topic." +  topic.getId() ;
+                String queueName = "queue.user." + sub.getUser().getId() ;
                 Queue queue = new Queue(queueName, true);
                 declarable.add(queue);
                 declarable.add(BindingBuilder.bind(queue).to(exchange).with("*"));

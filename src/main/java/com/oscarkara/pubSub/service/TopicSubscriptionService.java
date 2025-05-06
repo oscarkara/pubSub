@@ -23,13 +23,8 @@ public class TopicSubscriptionService {
         amqpAdmin.deleteExchange(exchangeName);
     }
 
-    public void deleteSubscriptionQueue(UUID topicId, UUID userId) {
-        String queueName = "queue.user." + userId + ".topic." + topicId ;
-        amqpAdmin.deleteQueue(queueName);
-    }
-
     public void subscribeUserToTopic(UUID topicId, UUID userId) {
-        String queueName = "queue.user." + userId + ".topic." + topicId ;
+        String queueName = "queue.user." + userId;
         String exchangeName = "exchange.topic." + topicId;
 
         Queue queue = QueueBuilder.durable(queueName).build();
@@ -42,8 +37,13 @@ public class TopicSubscriptionService {
     }
 
     public void unsubscribeUserToTopic(UUID topicId, UUID userId) {
-        String queueName = "queue.user." + userId + ".topic." + topicId;
+        String queueName = "queue.user." + userId;
+        String exchangeName = "exchange.topic." + topicId;
 
-        amqpAdmin.deleteQueue(queueName);
+        Queue queue = QueueBuilder.durable(queueName).build();
+        TopicExchange exchange = new TopicExchange(exchangeName);
+        Binding binding = BindingBuilder.bind(queue).to(exchange).with("");
+
+        amqpAdmin.removeBinding(binding);
     }
 }

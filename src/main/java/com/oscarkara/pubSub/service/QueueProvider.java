@@ -14,7 +14,7 @@ public class QueueProvider {
 
     public List<String> getUserQueues() {
         return subscriptionRepository.findAll().stream()
-                .map(sub -> "queue.user." + sub.getUser().getId() + ".topic." + sub.getTopic().getId())
+                .map(sub -> "queue.user." + sub.getUser().getId())
                 .toList();
     }
 }
