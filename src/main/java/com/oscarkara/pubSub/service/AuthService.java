@@ -5,6 +5,7 @@ import com.oscarkara.pubSub.repository.UserRepository;
 import com.oscarkara.pubSub.security.AuthRequest;
 import com.oscarkara.pubSub.security.AuthResponse;
 import com.oscarkara.pubSub.security.RegisterRequest;
+import com.oscarkara.pubSub.security.UserLoginDetails;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -37,7 +38,9 @@ public class AuthService {
 
         userRepository.save(user);
 
-        String token = jwtService.generateToken(user);
+        UserLoginDetails userDetails = new UserLoginDetails(user);
+        String token = jwtService.generateToken(userDetails);
+
         return new AuthResponse(token, "Bearer", "1Hour");
     }
 
@@ -49,7 +52,8 @@ public class AuthService {
         User user = userRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
 
-        String token = jwtService.generateToken(user);
+        UserLoginDetails userDetails = new UserLoginDetails(user);
+        String token = jwtService.generateToken(userDetails);
         return new AuthResponse(token, "Bearer", "1Hour");
     }
 }

@@ -1,6 +1,6 @@
 package com.oscarkara.pubSub.service;
 
-import com.oscarkara.pubSub.model.User;
+import com.oscarkara.pubSub.security.UserLoginDetails;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class JwtService {
@@ -18,26 +19,31 @@ public class JwtService {
 
     private static final long EXPIRATION = 1000 * 60 * 100; // 1 hora
 
-    public String generateToken(User user) {
+    public String generateToken(UserLoginDetails user) {
         return Jwts.builder()
-                .setSubject(user.getUsername())
+                .setSubject(user.user().getId().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
-
-    public String extractUsername(String token) {
-        return Jwts.parserBuilder()
+    public UUID extractUserId(String token) {
+        String subject = Jwts.parserBuilder()
                 .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
+
+        return UUID.fromString(subject);
     }
 
     public boolean isTokenValid(String token, UserDetails userDetails) {
-        return extractUsername(token).equals(userDetails.getUsername()) && !isTokenExpired(token);
+        UUID userId = extractUserId(token);
+        if (userDetails instanceof UserLoginDetails details) {
+            return userId.equals(details.user().getId()) && !isTokenExpired(token);
+        }
+        return false;
     }
 
     private boolean isTokenExpired(String token) {

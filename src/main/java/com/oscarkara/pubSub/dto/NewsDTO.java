@@ -1,4 +1,6 @@
 package com.oscarkara.pubSub.dto;
 
-public record NewsDTO(String title, String description) {
+import java.util.UUID;
+
+public record NewsDTO(UUID topicId, String title, String description) {
 }

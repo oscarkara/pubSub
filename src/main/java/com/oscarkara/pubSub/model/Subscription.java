@@ -9,6 +9,16 @@ import java.util.UUID;
 @Entity
 @Table(name = "tb_subscription")
 public class Subscription {
+    public Subscription() {
+    }
+
+    public Subscription(UUID id, Topic topic, User user, LocalDateTime subscribedAt) {
+        this.id = id;
+        this.topic = topic;
+        this.user = user;
+        this.subscribedAt = subscribedAt;
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
