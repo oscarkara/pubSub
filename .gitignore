@@ -31,7 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
-docker-compose.yml
-.mvn/wrapper/maven-wrapper.properties
 src/main/resources/application.properties
 src/main/resources/application.yml
+/bkp/
